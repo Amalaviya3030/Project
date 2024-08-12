@@ -201,11 +201,15 @@ static ParseResult parse_line(const char* line, int line_number, Parcel** out_pa
         return PARSE_FORMAT_ERROR;
     }
 
-    parcel->destination = strdup(temp_country);
+    // Allocate memory for the destination string
+    parcel->destination = (char*)malloc(strlen(temp_country) + 1);
     if (!parcel->destination) {
         free(parcel);
         return PARSE_MEMORY_ERROR;
     }
+
+    // Copy the string
+    strcpy(parcel->destination, temp_country);
 
     parcel->weight = weight;
     parcel->value = value;
@@ -213,6 +217,7 @@ static ParseResult parse_line(const char* line, int line_number, Parcel** out_pa
     *out_parcel = parcel;
     return PARSE_SUCCESS;
 }
+
 
 /*
 Function:       trim
