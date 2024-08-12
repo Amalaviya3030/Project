@@ -51,7 +51,7 @@ TreeNode* create_tree_node(Parcel* parcel);
 void insert_tree_node(TreeNode** root, Parcel* parcel);
 void insert_parcel(HashTable* table, Parcel* parcel);
 static ParseResult parse_line(const char* line, int line_number, Parcel** out_parcel);
-static ParseResult parse_line(const char* line, int line_number, Parcel** out_parcel);
+
 
 // main body function
 int main() {
@@ -65,6 +65,7 @@ int main() {
         // Display the bucket counts (just to confirm the data is loaded correctly)
         // display_bucket_counts(table);
 
+
         // Menu functionality
         int choice;
         do {
@@ -76,7 +77,24 @@ int main() {
 
                 // all functions with `handle_` manages the input by user and calls the respective functions,
                 // if any unusual things happen, it shows respective message for user's understanding.
-
+            case 1:
+                printf("1");
+                break;
+            case 2:
+                printf("2");
+                break;
+            case 3:
+                printf("3");
+                break;
+            case 4:
+                printf("4");
+                break;
+            case 5:
+                printf("5");
+                break;
+            case 6:
+                printf("Exiting application.\n");
+                break;
             
             default:
                 printf("Invalid choice. Please try again.\n");
