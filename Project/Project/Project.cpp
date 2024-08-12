@@ -47,6 +47,11 @@ unsigned long hash_djb2(const char* str);
 void display_menu();
 int get_user_choice();
 int read_file_and_populate_hash_table(HashTable* table, const char* filename);
+TreeNode* create_tree_node(Parcel* parcel);
+void insert_tree_node(TreeNode** root, Parcel* parcel);
+void insert_parcel(HashTable* table, Parcel* parcel);
+static ParseResult parse_line(const char* line, int line_number, Parcel** out_parcel);
+static ParseResult parse_line(const char* line, int line_number, Parcel** out_parcel);
 
 // main body function
 int main() {
