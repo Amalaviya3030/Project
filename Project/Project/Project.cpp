@@ -1,3 +1,13 @@
+/*
+FILE       : project
+PROJECT : project
+PROGRAMMER : ANCHITA KAKRIA(8961585) , ARYANKUMAT MALAVIYA(8963030) 
+FIRSTVERSION : 11 AUG 2024
+DESCRIPTION :This C program manages courier parcel data using Hash Tables and Binary Search Trees.
+It will read parcel details from the txt file and enables users to get info based on country, weight and value.
+*/
+
+
 #include <stdio.h>
 #include <setjmp.h>
 #include <stdlib.h>
