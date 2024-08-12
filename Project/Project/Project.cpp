@@ -1,20 +1,37 @@
-// Project.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
+#include <stdio.h>
 
-#include <iostream>
 
-int main()
-{
-    std::cout << "Hello World!\n";
+#define HASH_SIZE 127
+#define MAX_COUNTRY_LENGTH 21
+#define MAX_LINE_LENGTH 256
+
+// Parcel body structure
+typedef struct Parcel {
+    char* destination;
+    int weight;
+    float value;
+} Parcel;
+
+// Treenode structure for tree
+typedef struct TreeNode {
+    Parcel* parcel;
+    struct TreeNode* left;
+    struct TreeNode* right;
+} TreeNode;
+
+// HashTable structure
+typedef struct HashTable {
+    TreeNode* buckets[HASH_SIZE];
+} HashTable;
+
+//enums for errors
+typedef enum {
+    PARSE_SUCCESS,
+    PARSE_MEMORY_ERROR,
+    PARSE_FORMAT_ERROR
+} ParseResult;
+
+// main body function
+int main() {
+    return 0;
 }
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
