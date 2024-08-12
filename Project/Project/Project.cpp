@@ -63,7 +63,7 @@ void insert_tree_node(TreeNode** root, Parcel* parcel);
 void insert_parcel(HashTable* table, Parcel* parcel);
 static ParseResult parse_line(const char* line, int line_number, Parcel** out_parcel);
 void clean_up_hash_table(HashTable* table);
-void handle_display_parcels(HashTable* table)
+void handle_display_parcels(HashTable* table);
 
 // main body function
 int main() {
@@ -98,7 +98,7 @@ int main() {
                 // all functions with `handle_` manages the input by user and calls the respective functions,
                 // if any unusual things happen, it shows respective message for user's understanding.
             case 1:
-                printf("1");
+                handle_display_parcels(table);
                 break;
             case 2:
                 printf("2");
@@ -127,21 +127,21 @@ int main() {
 
     return 0;
 }
+// ALl handler function definations
 
 /*
-Function:       display_menu
-Description:    Displays the main menu with options for viewing and querying parcel details.
+Function:       printAllParcels
+Description:    This function prints all the parcel details present in tree, using tree traversal
+                Traversal occures using recursion using In-Order traversal
 */
-void display_menu() {
-    printf("\n\nMAIN MENU\n");
-    printf("=========\n\n");
-    printf("1. Enter country name and display all the parcels details\n");
-    printf("2. Enter country and weight pair\n");
-    printf("3. Display the total parcel load and valuation for the country\n");
-    printf("4. Enter the country name and display cheapest and most expensive parcel's details\n");
-    printf("5. Enter the country name and display lightest and heaviest parcel for the country\n");
-    printf("6. Exit the application\n");
+void printAllParcels(TreeNode* root) {
+    if (root == NULL) return;
+    printAllParcels(root->left);
+    printf("Destination: %s, Weight: %d, Value: %.2f\n",
+        root->parcel->destination, root->parcel->weight, root->parcel->value);
+    printAllParcels(root->right);
 }
+
 
 /*
 Function:       get_user_choice
@@ -211,6 +211,20 @@ TreeNode* create_tree_node(Parcel* parcel) {
     return newNode;
 }
 
+/*
+Function:       display_menu
+Description:    Displays the main menu with options for viewing and querying parcel details.
+*/
+void display_menu() {
+    printf("\n\nMAIN MENU\n");
+    printf("=========\n\n");
+    printf("1. Enter country name and display all the parcels details\n");
+    printf("2. Enter country and weight pair\n");
+    printf("3. Display the total parcel load and valuation for the country\n");
+    printf("4. Enter the country name and display cheapest and most expensive parcel's details\n");
+    printf("5. Enter the country name and display lightest and heaviest parcel for the country\n");
+    printf("6. Exit the application\n");
+}
 /*
 Function:       insert_tree_node
 Description:    Recursively inserts a Parcel into a binary search tree. If the tree is empty,
