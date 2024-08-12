@@ -44,6 +44,7 @@ typedef enum {
 // Function prototypes
 
 unsigned long hash_djb2(const char* str);
+HashTable* create_hash_table();
 void display_menu();
 int get_user_choice();
 int read_file_and_populate_hash_table(HashTable* table, const char* filename);
@@ -51,13 +52,21 @@ TreeNode* create_tree_node(Parcel* parcel);
 void insert_tree_node(TreeNode** root, Parcel* parcel);
 void insert_parcel(HashTable* table, Parcel* parcel);
 static ParseResult parse_line(const char* line, int line_number, Parcel** out_parcel);
-
+void clean_up_hash_table(HashTable* table);
 
 // main body function
 int main() {
 
     // initiate HashTable
     HashTable* table = NULL;
+    if (setjmp(error_buf) != 0) {
+        // Error occurred, clean up and exit
+        if (table) clean_up_hash_table(table);
+        return 1;
+    }
+
+    // create hashtable using helper function
+    table = create_hash_table();
 
     // read the file and load the data into hashtable, then validation occures
     if (read_file_and_populate_hash_table(table, "countries.txt") > 0) {
@@ -136,6 +145,24 @@ int get_user_choice() {
     }
     while (getchar() != '\n');  // Clear input buffer
     return choice;
+}
+
+
+/*
+Function:       create_hash_table
+Description:    Allocates memory for a new hash table, initializes its buckets to NULL,
+                and handles memory allocation failure.
+*/
+HashTable* create_hash_table() {
+    HashTable* table = (HashTable*)malloc(sizeof(HashTable));
+    if (table == NULL) {
+        fprintf(stderr, "Memory allocation failed for hash table\n");
+        exit(EXIT_FAILURE);
+    }
+    for (int i = 0; i < HASH_SIZE; i++) {
+        table->buckets[i] = NULL;
+    }
+    return table;
 }
 
 // Other function definations (helper functions)
@@ -318,4 +345,28 @@ int read_file_and_populate_hash_table(HashTable* table, const char* filename) {
 
     printf("Processed %d lines, successfully inserted %d parcels\n", line_count, successful_inserts);
     return successful_inserts;
+}
+/*
+Function:       clean_up_tree
+Description:    Recursively frees the memory used by all nodes in a binary search tree and their
+                associated parcels. It first deallocates memory for the parcel and then the tree node itself.
+*/
+void clean_up_tree(TreeNode* root) {
+    if (root == NULL) return;
+    clean_up_tree(root->left);
+    clean_up_tree(root->right);
+    free(root->parcel->destination);
+    free(root->parcel);
+    free(root);
+} 
+
+/*
+Function:       clean_up_hash_table
+Description:    Frees the memory used by all buckets in a hash table and then deallocates the hash table itself.
+*/
+void clean_up_hash_table(HashTable* table) {
+    for (int i = 0; i < HASH_SIZE; i++) {
+        clean_up_tree(table->buckets[i]);
+    }
+    free(table);
 }
