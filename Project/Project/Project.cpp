@@ -64,6 +64,8 @@ void insert_parcel(HashTable* table, Parcel* parcel);
 static ParseResult parse_line(const char* line, int line_number, Parcel** out_parcel);
 void clean_up_hash_table(HashTable* table);
 void handle_display_parcels(HashTable* table)
+TreeNode* find_bucket_root(HashTable* table, const char* country);
+bool get_country_input(char* country);
 
 // main body function
 int main() {
@@ -356,6 +358,38 @@ int read_file_and_populate_hash_table(HashTable* table, const char* filename) {
 
     printf("Processed %d lines, successfully inserted %d parcels\n", line_count, successful_inserts);
     return successful_inserts;
+}
+
+/*
+Function:       get_country_input
+Description:    Prompts the user for a country name, reads it from input, and removes the newline character.
+                Returns true if the input was read successfully, otherwise returns false.
+*/
+bool get_country_input(char* country) {
+    printf("Enter country name: ");
+    if (fgets(country, sizeof(country), stdin) == NULL) {
+        printf("Error reading input.\n");
+        return false;
+    }
+    country[strcspn(country, "\n")] = '\0';
+    return true;
+}
+
+/*
+Function:       findBucketRoot
+Description:    Retrieves the root node of the binary search tree in the hash table bucket corresponding
+                to the hashed index of the given country. If the root node's destination matches the
+                country name (case-insensitive), it returns the root node; otherwise, it returns NULL.
+*/
+TreeNode* find_bucket_root(HashTable* table, const char* country) {
+    unsigned long index = hash_djb2(country);
+    TreeNode* root = table->buckets[index];
+    if (root != NULL) {
+        if (_stricmp(root->parcel->destination, country) == 0) {
+            return root;
+        }
+    }
+    return NULL;
 }
 
 /*
