@@ -1,3 +1,13 @@
+/*
+FILE       : project
+PROJECT : project
+PROGRAMMER : ANCHITA KAKRIA(8961585) , ARYANKUMAT MALAVIYA(8963030) 
+FIRSTVERSION : 11 AUG 2024
+DESCRIPTION :This C program manages courier parcel data using Hash Tables and Binary Search Trees.
+It will read parcel details from the txt file and enables users to get info based on country, weight and value.
+*/
+
+
 #include <stdio.h>
 #include <setjmp.h>
 #include <stdlib.h>
@@ -53,7 +63,7 @@ void insert_tree_node(TreeNode** root, Parcel* parcel);
 void insert_parcel(HashTable* table, Parcel* parcel);
 static ParseResult parse_line(const char* line, int line_number, Parcel** out_parcel);
 void clean_up_hash_table(HashTable* table);
-void handle_display_parcels(HashTable* table);
+void handle_display_parcels(HashTable* table)
 
 // main body function
 int main() {
@@ -346,6 +356,38 @@ int read_file_and_populate_hash_table(HashTable* table, const char* filename) {
 
     printf("Processed %d lines, successfully inserted %d parcels\n", line_count, successful_inserts);
     return successful_inserts;
+}
+
+/*
+Function:       get_country_input
+Description:    Prompts the user for a country name, reads it from input, and removes the newline character.
+                Returns true if the input was read successfully, otherwise returns false.
+*/
+bool get_country_input(char* country) {
+    printf("Enter country name: ");
+    if (fgets(country, sizeof(country), stdin) == NULL) {
+        printf("Error reading input.\n");
+        return false;
+    }
+    country[strcspn(country, "\n")] = '\0';
+    return true;
+}
+
+/*
+Function:       findBucketRoot
+Description:    Retrieves the root node of the binary search tree in the hash table bucket corresponding
+                to the hashed index of the given country. If the root node's destination matches the
+                country name (case-insensitive), it returns the root node; otherwise, it returns NULL.
+*/
+TreeNode* find_bucket_root(HashTable* table, const char* country) {
+    unsigned long index = hash_djb2(country);
+    TreeNode* root = table->buckets[index];
+    if (root != NULL) {
+        if (_stricmp(root->parcel->destination, country) == 0) {
+            return root;
+        }
+    }
+    return NULL;
 }
 
 /*
