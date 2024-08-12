@@ -53,7 +53,7 @@ void insert_tree_node(TreeNode** root, Parcel* parcel);
 void insert_parcel(HashTable* table, Parcel* parcel);
 static ParseResult parse_line(const char* line, int line_number, Parcel** out_parcel);
 void clean_up_hash_table(HashTable* table);
-void handle_display_parcels(HashTable* table)
+void handle_display_parcels(HashTable* table);
 
 // main body function
 int main() {
