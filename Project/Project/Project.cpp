@@ -103,8 +103,7 @@ int main() {
                 handle_display_parcels(table);
                 break;
             case 2:
-                printf("2");
-                break;
+                handle_filter_by_weight(table);
             case 3:
                 printf("3");
                 break;
