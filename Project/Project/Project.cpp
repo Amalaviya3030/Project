@@ -53,6 +53,7 @@ void insert_tree_node(TreeNode** root, Parcel* parcel);
 void insert_parcel(HashTable* table, Parcel* parcel);
 static ParseResult parse_line(const char* line, int line_number, Parcel** out_parcel);
 void clean_up_hash_table(HashTable* table);
+void handle_display_parcels(HashTable* table)
 
 // main body function
 int main() {
@@ -345,6 +346,31 @@ int read_file_and_populate_hash_table(HashTable* table, const char* filename) {
 
     printf("Processed %d lines, successfully inserted %d parcels\n", line_count, successful_inserts);
     return successful_inserts;
+}
+
+/*
+Function:       handle_display_parcels
+Description:    Prompts the user for a country name and displays all parcels associated with that
+                country from the hash table. It reads the country name from the input, removes
+                the newline character, and retrieves the corresponding binary search tree from the
+                hash table. If parcels are found, it calls a function to print them; otherwise,
+                it notifies the user that no parcels were found for the specified country.
+*/
+void handle_display_parcels(HashTable* table) {
+    char country[MAX_COUNTRY_LENGTH];
+
+    if (!get_country_input(country)) {
+        return;
+    }
+
+    TreeNode* root = find_bucket_root(table, country);
+    if (root != NULL) {
+        // handler function call
+        printAllParcels(root);
+    }
+    else {
+        printf("No parcels found for %s.\n", country);
+    }
 }
 /*
 Function:       clean_up_tree
