@@ -64,6 +64,8 @@ void insert_parcel(HashTable* table, Parcel* parcel);
 static ParseResult parse_line(const char* line, int line_number, Parcel** out_parcel);
 void clean_up_hash_table(HashTable* table);
 void handle_display_parcels(HashTable* table);
+void handle_filter_by_weight(HashTable* table);
+void printParcelsByWeight(TreeNode* root, int weight, bool higher);
 
 // main body function
 int main() {
@@ -142,6 +144,27 @@ void printAllParcels(TreeNode* root) {
     printAllParcels(root->right);
 }
 
+/*
+Function:       printParcelsByWeight
+Description:    This function prints all the parcel details from the user entered destination combined with:
+                higher weight then user entered weight (based on bool value)
+                lower weight then user entered weight (based on bool value)
+                Also as we are going from one node to another using recursion, we use In-Order traversal
+*/
+void printParcelsByWeight(TreeNode* root, int weight, bool higher) {
+    if (root == NULL) {
+        return;
+    }
+
+    printParcelsByWeight(root->left, weight, higher);
+
+    if ((higher && root->parcel->weight > weight) || (!higher && root->parcel->weight < weight)) {
+        printf("Destination: %s, Weight: %d, Value: %.2f\n",
+            root->parcel->destination, root->parcel->weight, root->parcel->value);
+    }
+
+    printParcelsByWeight(root->right, weight, higher);
+}
 
 /*
 Function:       get_user_choice
@@ -428,6 +451,49 @@ void handle_display_parcels(HashTable* table) {
         printf("No parcels found for %s.\n", country);
     }
 }
+
+/*
+Function:       handle_filter_by_weight
+Description:    Prompts the user for a country name, weight, and a filter choice to display parcels
+                based on their weight. It reads the country name, weight, and filter choice from
+                the input, then retrieves the corresponding binary search tree from the hash table.
+                Based on the filter choice (higher or lower weight), it calls a function to print
+                the relevant parcels. If no parcels are found for the specified country or if input
+                is invalid, it notifies the user.
+*/
+void handle_filter_by_weight(HashTable* table) {
+    char country[MAX_COUNTRY_LENGTH];
+    int weight, higher;
+
+    if (!get_country_input(country)) {
+        return;
+    }
+
+    printf("Enter weight: ");
+    if (scanf("%d", &weight) != 1) {
+        printf("Invalid weight input.\n");
+        while (getchar() != '\n');  // Clear input buffer
+        return;
+    }
+
+    printf("Do you want parcels with weight higher (1) or lower (0)? ");
+    if (scanf("%d", &higher) != 1 || (higher != 0 && higher != 1)) {
+        printf("Invalid choice. Please enter 0 or 1.\n");
+        while (getchar() != '\n');  // Clear input buffer
+        return;
+    }
+    while (getchar() != '\n');  // Clear input buffer
+
+    TreeNode* root = find_bucket_root(table, country);
+    if (root != NULL) {
+        // handler function
+        printParcelsByWeight(root, weight, higher);
+    }
+    else {
+        printf("No parcels found for %s.\n", country);
+    }
+}
+
 /*
 Function:       clean_up_tree
 Description:    Recursively frees the memory used by all nodes in a binary search tree and their
