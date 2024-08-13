@@ -100,7 +100,7 @@ int main() {
     table = create_hash_table();
 
     // read the file and load the data into hashtable, then validation occures
-    if (read_file_and_populate_hash_table(table, "countries.txt") > 0) {
+    if (read_file_and_populate_hash_table(table, "couries.txt") > 0) {
 
         // Display the bucket counts (just to confirm the data is loaded correctly)
         // display_bucket_counts(table);
@@ -155,6 +155,7 @@ int main() {
 Function:       printAllParcels
 Description:    This function prints all the parcel details present in tree, using tree traversal
                 Traversal occures using recursion using In-Order traversal
+Parameters:     TreeNode* root
 */
 void printAllParcels(TreeNode* root) {
     if (root == NULL) return;
@@ -170,6 +171,7 @@ Description:    This function prints all the parcel details from the user entere
                 higher weight then user entered weight (based on bool value)
                 lower weight then user entered weight (based on bool value)
                 Also as we are going from one node to another using recursion, we use In-Order traversal
+Parameters:     TreeNode* root, int weight, bool higher
 */
 void printParcelsByWeight(TreeNode* root, int weight, bool higher) {
     if (root == NULL) {
@@ -190,6 +192,7 @@ void printParcelsByWeight(TreeNode* root, int weight, bool higher) {
 Function:       calculateTotalLoadAndValue
 Description:    This function is used to calculate cummulative sum of weight as well as value.
                 Again it follows In-Order traversal.
+Parameters:     TreeNode* root, int* totalLoad, float* totalValue
 */
 void calculateTotalLoadAndValue(TreeNode* root, int* totalLoad, float* totalValue) {
     if (root == NULL || totalLoad == NULL || totalValue == NULL) {
@@ -207,6 +210,7 @@ void calculateTotalLoadAndValue(TreeNode* root, int* totalLoad, float* totalValu
 Function:       findCheapestAndMostExpensive
 Description:    This function is used to filter smallest value and largest value from tree.
                 This handler function is being used in other helper function and follows In-Order traversal.
+Parameters:     TreeNode* root, TreeNode** cheapest, TreeNode** mostExpensive
 */
 void findCheapestAndMostExpensive(TreeNode* root, TreeNode** cheapest, TreeNode** mostExpensive) {
     if (root == NULL || cheapest == NULL || mostExpensive == NULL) {
@@ -228,6 +232,7 @@ void findCheapestAndMostExpensive(TreeNode* root, TreeNode** cheapest, TreeNode*
 Function:       findLightestAndHeaviest
 Description:    This function is used to filter smallest weight and largest weight from tree.
                 This handler function is being used in other helper function and follows In-Order traversal.
+Parameters:     TreeNode* root, TreeNode** lightest, TreeNode** heaviest
 */
 void findLightestAndHeaviest(TreeNode* root, TreeNode** lightest, TreeNode** heaviest) {
     if (root == NULL || lightest == NULL || heaviest == NULL) {
@@ -254,6 +259,7 @@ Description:    This function computes a hash value for a given string using the
                 It is used to generate a unique hash value for the destination country names,
                 which is then used to index the hash table. The computed hash value is
                 ensured to fit within the bounds of the hash table size (HASH_SIZE).
+Parameters:     const char* str
 */
 unsigned long hash_djb2(const char* str) {
     unsigned long hash = 5381;
@@ -270,6 +276,7 @@ Description:    This function recursively counts the number of nodes in a binary
                 It traverses the tree, summing up the total number
                 of nodes by adding one for the current node and recursively counting
                 the nodes in the left and right subtrees.
+Parameters:     TreeNode* root
 */
 int count_tree_nodes(TreeNode* root) {
     if (root == NULL) return 0;
@@ -281,6 +288,7 @@ Function:       display_bucket_counts
 Description:    This function was generated to display the node values and parcel count in each hashtable bucket.
                 As it is just to test the file read and data push into hashtable,
                 it is not being used for any other purposes.
+Parameters:     HashTable* table
 */
 void display_bucket_counts(HashTable* table) {
     printf("\nBucket counts:\n");
@@ -307,6 +315,7 @@ void display_bucket_counts(HashTable* table) {
 /*
 Function:       display_menu
 Description:    Displays the main menu with options for viewing and querying parcel details.
+Parameters:     none
 */
 void display_menu() {
     printf("\n\nMAIN MENU\n");
@@ -322,6 +331,7 @@ void display_menu() {
 /*
 Function:       get_user_choice
 Description:    Prompts the user for a menu selection, handles input validation, and returns the chosen option.
+Parameters:     none
 */
 int get_user_choice() {
     int choice;
@@ -338,6 +348,7 @@ int get_user_choice() {
 Function:       create_hash_table
 Description:    Allocates memory for a new hash table, initializes its buckets to NULL,
                 and handles memory allocation failure.
+Parameters:     none
 */
 HashTable* create_hash_table() {
     HashTable* table = (HashTable*)malloc(sizeof(HashTable));
@@ -355,6 +366,7 @@ HashTable* create_hash_table() {
 Function:       parse_line
 Description:    Parses a line of text to extract parcel details and allocates memory
                 for a new Parcel struct, handling errors for memory allocation and format.
+Parameters:     const char* line, int line_number, Parcel** out_parcel
 */
 static ParseResult parse_line(const char* line, int line_number, Parcel** out_parcel) {
     Parcel* parcel = (Parcel*)malloc(sizeof(Parcel));
@@ -392,6 +404,7 @@ static ParseResult parse_line(const char* line, int line_number, Parcel** out_pa
 /*
 Function:       trim
 Description:    Removes leading and trailing whitespace from a given string.
+Parameters:     char* str
 */
 void trim(char* str) {
     if (str == NULL) return;
@@ -411,6 +424,7 @@ Function:       create_tree_node
 Description:    Allocates memory for a new TreeNode, initializes it with the given Parcel,
                 and sets its left and right child pointers to NULL. If memory allocation fails,
                 an error message is printed and the program exits.
+Parameters:     Parcel* parce
 */
 TreeNode* create_tree_node(Parcel* parcel) {
     TreeNode* newNode = (TreeNode*)malloc(sizeof(TreeNode));
@@ -429,6 +443,7 @@ Description:    Recursively inserts a Parcel into a binary search tree. If the t
                 it creates a new TreeNode with the given Parcel. If the tree is not empty,
                 it compares the weight of the given Parcel with the weight of the Parcel in
                 the current node and inserts it into the left or right subtree accordingly.
+Parameters:     TreeNode** root, Parcel* parcel
 */
 void insert_tree_node(TreeNode** root, Parcel* parcel) {
     if (*root == NULL) {
@@ -447,6 +462,7 @@ Function:       insert_parcel
 Description:    Inserts a Parcel into a hash table. It first checks if the table or parcel is
                 NULL. Then, it computes the hash index for the Parcel's destination and
                 inserts the Parcel into the corresponding bucket's binary search tree.
+Parameters:     HashTable* table, Parcel* parcel
 */
 void insert_parcel(HashTable* table, Parcel* parcel) {
     if (table == NULL || parcel == NULL) return;
@@ -461,6 +477,7 @@ Description:    Reads a file containing parcel data and populates a hash table w
                 create and insert Parcel objects into the hash table. Handles errors such as file
                 opening issues, memory allocation failures, and format errors, and prints the
                 number of lines processed and parcels successfully inserted.
+Parameters:     HashTable* table, const char* filename
 */
 int read_file_and_populate_hash_table(HashTable* table, const char* filename) {
     FILE* file = NULL;
@@ -519,6 +536,7 @@ int read_file_and_populate_hash_table(HashTable* table, const char* filename) {
 Function:       get_country_input
 Description:    Prompts the user for a country name, reads it from input, and removes the newline character.
                 Returns true if the input was read successfully, otherwise returns false.
+Parameters:     char* country
 */
 bool get_country_input(char* country) {
     printf("Enter country name: ");
@@ -535,6 +553,7 @@ Function:       findBucketRoot
 Description:    Retrieves the root node of the binary search tree in the hash table bucket corresponding
                 to the hashed index of the given country. If the root node's destination matches the
                 country name (case-insensitive), it returns the root node; otherwise, it returns NULL.
+Parameters:     HashTable* table, const char* country
 */
 TreeNode* find_bucket_root(HashTable* table, const char* country) {
     unsigned long index = hash_djb2(country);
@@ -554,6 +573,7 @@ Description:    Prompts the user for a country name and displays all parcels ass
                 the newline character, and retrieves the corresponding binary search tree from the
                 hash table. If parcels are found, it calls a function to print them; otherwise,
                 it notifies the user that no parcels were found for the specified country.
+Parameters:     HashTable* table
 */
 void handle_display_parcels(HashTable* table) {
     char country[MAX_COUNTRY_LENGTH];
@@ -580,6 +600,7 @@ Description:    Prompts the user for a country name, weight, and a filter choice
                 Based on the filter choice (higher or lower weight), it calls a function to print
                 the relevant parcels. If no parcels are found for the specified country or if input
                 is invalid, it notifies the user.
+Parameters:     HashTable* table
 */
 void handle_filter_by_weight(HashTable* table) {
     char country[MAX_COUNTRY_LENGTH];
@@ -622,6 +643,7 @@ Description:    Prompts the user for a country name and calculates the total loa
                 hash table, and calls a function to compute the total load and value of the
                 parcels. The results are then printed. If no parcels are found for the specified
                 country, it notifies the user.
+Parameters:     HashTable* table
 */
 void handle_total_load_and_value(HashTable* table) {
     char country[MAX_COUNTRY_LENGTH];
@@ -649,6 +671,7 @@ Description:    Prompts the user for a country name and identifies the cheapest 
                 and calls a function to find the cheapest and most expensive parcels. The details of
                 these parcels are then printed. If no parcels are found or if the function cannot
                 determine the cheapest or most expensive parcels, it notifies the user.
+Parameters:     HashTable* table
 */
 void handle_cheapest_and_most_expensive(HashTable* table) {
     char country[MAX_COUNTRY_LENGTH];
@@ -683,6 +706,7 @@ Description:    Prompts the user for a country name and identifies the lightest 
                 and calls a function to find the lightest and heaviest parcels. The details of these
                 parcels are then printed. If no parcels are found or if the function cannot determine
                 the lightest or heaviest parcels, it notifies the user.
+Parameters:     HashTable* table
 */
 void handle_lightest_and_heaviest(HashTable* table) {
     char country[MAX_COUNTRY_LENGTH];
@@ -713,6 +737,7 @@ void handle_lightest_and_heaviest(HashTable* table) {
 Function:       clean_up_tree
 Description:    Recursively frees the memory used by all nodes in a binary search tree and their
                 associated parcels. It first deallocates memory for the parcel and then the tree node itself.
+Parameters:     TreeNode* root
 */
 void clean_up_tree(TreeNode* root) {
     if (root == NULL) return;
@@ -726,6 +751,7 @@ void clean_up_tree(TreeNode* root) {
 /*
 Function:       clean_up_hash_table
 Description:    Frees the memory used by all buckets in a hash table and then deallocates the hash table itself.
+Parameters:     HashTable* table
 */
 void clean_up_hash_table(HashTable* table) {
     for (int i = 0; i < HASH_SIZE; i++) {
